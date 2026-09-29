@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum type in Prisma — fields below that represent a
+// closed set of values (role, authoredBy, job type/status, message status)
+// are plain String columns, validated against the shared union types in
+// packages/shared/src/index.ts (UserRole, FileAuthor, JobType, JobStatus,
+// AgentMessageStatus) at the application layer instead.
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  passwordHash      String
+  role              String   @default("USER")
+  storageQuotaBytes BigInt   @default(5368709120) // 5 GB default
+  aiRequestQuota    Int      @default(200) // requests per day
+  isBlocked         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  folders       Folder[]
+  files         File[]
+  jobs          Job[]
+  auditLogs     AuditLog[]
+  agentSessions AgentSession[]
+  shareLinks    ShareLink[]
+
+  @@map("users")
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  parentId  String?
+  parent    Folder?  @relation("FolderTree", fields: [parentId], references: [id])
+  children  Folder[] @relation("FolderTree")
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+
+  files File[]
+
+  @@index([ownerId, parentId])
+  @@map("folders")
+}
+
+model File {
+  id         String    @id @default(cuid())
+  name       String
+  folderId   String?
+  folder     Folder?   @relation(fields: [folderId], references: [id])
+  ownerId    String
+  owner      User      @relation(fields: [ownerId], references: [id])
+  mimeType   String
+  sizeBytes  Int
+  storageKey String
+  lastAuthor String    @default("USER")
+  deletedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  versions          FileVersion[]
+  agentSessions     AgentSession[]
+  agentSessionFiles AgentSessionFile[]
+  shareLinks        ShareLink[]
+
+  @@index([ownerId, folderId])
+  @@map("files")
+}
+
+model FileVersion {
+  id         String   @id @default(cuid())
+  fileId     String
+  file       File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  storageKey String
+  sizeBytes  Int
+  authoredBy String   @default("USER")
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@index([fileId])
+  @@map("file_versions")
+}
+
+model ShareLink {
+  id                String    @id @default(cuid())
+  fileId            String
+  file              File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  token             String    @unique
+  allowAnyInOrg     Boolean   @default(true)
+  sharedWithUserIds String? // JSON-encoded string[] of User.id, used when allowAnyInOrg = false
+  createdById       String
+  createdBy         User      @relation(fields: [createdById], references: [id])
+  expiresAt         DateTime?
+  createdAt         DateTime  @default(now())
+
+  @@map("share_links")
+}
+
+model AgentSession {
+  id          String   @id @default(cuid())
+  // Nullable + superseded by AgentSessionFile below, which supports
+  // attaching zero or more files to one session (a general chat with no
+  // file yet, or several at once) — kept only so existing rows created
+  // before that table existed still resolve their original single file.
+  fileId      String?
+  file        File?    @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  messages AgentMessage[]
+  files    AgentSessionFile[]
+
+  @@index([fileId])
+  @@map("agent_sessions")
+}
+
+model AgentSessionFile {
+  id        String       @id @default(cuid())
+  sessionId String
+  session   AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  fileId    String
+  file      File         @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([sessionId, fileId])
+  @@index([sessionId])
+  @@map("agent_session_files")
+}
+
+model AgentMessage {
+  id           String       @id @default(cuid())
+  sessionId    String
+  session      AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role         String // "user" | "assistant"
+  content      String
+  proposedDiff String? // JSON: internal diff (summary/before/after/draftKey/...)
+  status       String       @default("none")
+  createdAt    DateTime     @default(now())
+
+  @@index([sessionId])
+  @@map("agent_messages")
+}
+
+model Job {
+  id           String   @id @default(cuid())
+  type         String
+  status       String   @default("queued")
+  progress     Int      @default(0)
+  payloadJson  String
+  resultJson   String?
+  errorMessage String?
+  createdById  String
+  createdBy    User     @relation(fields: [createdById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status])
+  @@map("jobs")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  targetType String
+  targetId   String?
+  meta       String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model Settings {
+  key   String @id
+  value String
+
+  @@map("settings")
+}

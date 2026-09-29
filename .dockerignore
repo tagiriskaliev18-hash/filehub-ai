@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+apps/api/dist
+apps/web/dist
+apps/api/prisma/dev.db
+apps/api/prisma/dev.db-*
+storage
+.env
+apps/api/.env
+apps/web/.env
+*.log
+.git
+.claude

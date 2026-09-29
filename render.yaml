@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: filehub-ai
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm install && npm run prisma:generate -w apps/api && npm run build
+    startCommand: npm run prisma:deploy -w apps/api && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: "file:./dev.db"

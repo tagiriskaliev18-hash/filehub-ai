@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+.env
+**/.env
+**/.env.*
+!**/.env.example
+storage/*
+!storage/.gitkeep
+apps/api/prisma/*.db
+apps/api/prisma/*.db-*
+apps/api/prisma/*.db-shm
+apps/api/prisma/*.db-wal
+apps/api/prisma/*.db-journal
+*.log
+.DS_Store
