@@ -5,8 +5,7 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "declaration": true,
-    "rootDir": "src",
-    "types": ["node"]
+    "rootDir": "src"
   },
   "include": ["src"]
 }
