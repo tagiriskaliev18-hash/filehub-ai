@@ -1,5 +1,7 @@
 # FileHub AI
 
+> Часть экосистемы **[MindTagSystem](https://github.com/tagiriskaliev18-hash/MindTagSystem)** · автор **Тагир Искалиев** ([@tagiriskaliev18-hash](https://github.com/tagiriskaliev18-hash))
+
 Corporate web platform for file storage, an AI agent that edits Office files via natural language, compression-to-target-size, and format conversion — built as an MVP slice of the full ТЗ (see `ТЗ_веб-платформа_с_ИИ-агентом.docx`). See `context.md`-style notes below for what's implemented vs. deferred.
 
 ## Stack
@@ -71,3 +73,25 @@ All other conversions (images, audio/video, XLSX↔CSV, ZIP) work without LibreO
 - `replace_text` (docx) and `edit_slide_text` (pptx) match text across Word/PowerPoint's run-fragmentation boundaries, but a replaced phrase adopts the formatting of its *first* run rather than preserving mixed formatting mid-phrase
 - PDF compression only recompresses JPEG-filtered embedded images (the common case); raw/Flate-encoded image streams are left untouched
 - `add_slide` clones the previous slide as a template; on very unusual slide layouts it falls back to treating the first two text shapes as title/body
+
+---
+
+## 🌐 Часть экосистемы MindTagSystem
+
+FileHub AI входит в **[MindTagSystem](https://github.com/tagiriskaliev18-hash/MindTagSystem)** — экосистему для программистов, которую создаёт **Тагир Искалиев** ([@tagiriskaliev18-hash](https://github.com/tagiriskaliev18-hash)): своя операционная система, браузер, IDE, ИИ-ядро и приложения, которые работают вместе и которые можно встроить в любое устройство.
+
+**Роль в экосистеме:** облачное хранилище с ИИ-агентом (слой «Приложения»).
+
+| Слой | Проект | Что делает |
+|---|---|---|
+| Платформа | [AIsktagOS](https://github.com/tagiriskaliev18-hash/AisktagOS) | Операционная система для разработчиков в стиле macOS на любом железе |
+| Инструменты разработчика | [Mind IDE](https://github.com/tagiriskaliev18-hash/Mind-IDE) | ИИ-среда разработки: один чат с моделями, Claude Code и Antigravity |
+| Инструменты разработчика | [ITIS Browser](https://github.com/tagiriskaliev18-hash/ITIS-browser) | Браузер с ИИ-агентом, который сам кликает и листает страницы |
+| ИИ-ядро | [AI Duo (multimodel-agent)](https://github.com/tagiriskaliev18-hash/multimodel-agent) | Единый ИИ-шлюз с OpenAI-совместимым API для всех моделей |
+| ИИ-ядро | [Antigravity ↔ Claude Code Bridge](https://github.com/tagiriskaliev18-hash/antigravity-claude-bridge) | MCP-мост, который связывает Antigravity, Claude Code и пул моделей |
+| ИИ-ядро | [Qwen 14B Coder Dev](https://github.com/tagiriskaliev18-hash/qwen14b-coder-dev) | Локальная офлайн-модель для программирования в Ollama |
+| Приложения | **FileHub AI** ← вы здесь | Хранилище файлов с ИИ-агентом для Word, PowerPoint и Excel |
+| Приложения | [SortApp (анализатор логов)](https://github.com/tagiriskaliev18-hash/sortapp) | Анализатор журналов доступа к сетевым папкам с отчётами Excel |
+| Приложения | [ИИ Доктор (medical-ai-assistant)](https://github.com/tagiriskaliev18-hash/medical-ai-assistant) | Офлайн-ассистент врача приёмного покоя |
+
+Как проекты связаны между собой: [архитектура MindTagSystem](https://github.com/tagiriskaliev18-hash/MindTagSystem/blob/main/docs/ARCHITECTURE.md). Автор всех проектов экосистемы — Тагир Искалиев.
