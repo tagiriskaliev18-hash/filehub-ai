@@ -5,6 +5,7 @@ import { useAuth } from "../lib/AuthContext";
 import { api, ApiError } from "../lib/api";
 import { useJobsPolling } from "../lib/useJobsPolling";
 import { formatBytes } from "../lib/format";
+import { MindIcon, type MindIconName } from "./MindIcon";
 
 interface JobFileResult {
   fileId: string;
@@ -26,10 +27,10 @@ function parseSingleJobResult(job: JobDto): JobFileResult | null {
   return null;
 }
 
-const NAV_ITEMS = [
-  { to: "/", label: "Мои файлы", icon: "📁" },
-  { to: "/agent", label: "ИИ-агент", icon: "🤖" },
-  { to: "/trash", label: "Корзина", icon: "🗑️" },
+const NAV_ITEMS: { to: string; label: string; icon: MindIconName }[] = [
+  { to: "/", label: "Мои файлы", icon: "folder" },
+  { to: "/agent", label: "ИИ-агент", icon: "bot" },
+  { to: "/trash", label: "Корзина", icon: "trash" },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -64,19 +65,25 @@ export function Layout({ children }: { children: ReactNode }) {
     navigate("/login");
   }
 
-  const navItems = user?.role === "ADMIN" ? [...NAV_ITEMS, { to: "/admin", label: "Админ", icon: "⚙️" }] : NAV_ITEMS;
+  const navItems = user?.role === "ADMIN" ? [...NAV_ITEMS, { to: "/admin", label: "Админ", icon: "settings" as const }] : NAV_ITEMS;
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b bg-white px-4 py-3 flex items-center justify-between gap-2">
+      <header className="border-b bg-white px-4 py-3 flex items-center justify-between gap-2 relative">
         <div className="flex items-center gap-6 min-w-0">
-          <Link to="/" className="font-semibold text-lg text-brand-700 shrink-0">
-            FileHub AI
+          <Link to="/" className="font-semibold text-lg shrink-0 flex items-center gap-2 mt-bounce">
+            <span className="mt-orb w-6 h-6 inline-block" aria-hidden="true" />
+            <span className="mt-gradient-text">FileHub AI</span>
           </Link>
           {/* Desktop nav — hidden on phones, replaced by the bottom tab bar there */}
           <nav className="hidden sm:flex gap-4 text-sm text-gray-600">
             {navItems.map((item) => (
-              <Link key={item.to} to={item.to} className="hover:text-brand-600">
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex items-center gap-1.5 hover:text-brand-600 mt-bounce ${location.pathname === item.to ? "text-brand-700 font-medium" : ""}`}
+              >
+                <MindIcon name={item.icon} />
                 {item.label}
               </Link>
             ))}
@@ -96,11 +103,12 @@ export function Layout({ children }: { children: ReactNode }) {
         {/* Mobile: compact menu button instead of the full desktop nav/user bar */}
         <button
           onClick={() => setMenuOpen((v) => !v)}
-          className="sm:hidden text-gray-600 border rounded px-2 py-1 text-sm"
+          className="sm:hidden text-gray-600 border rounded px-2 py-1 text-sm flex items-center gap-1 mt-bounce"
           aria-label="Меню"
         >
-          {user?.email ? user.email.split("@")[0] : "Меню"} ▾
+          {user?.email ? user.email.split("@")[0] : "Меню"} <MindIcon name="chevron-down" />
         </button>
+        <div className="fh-accent-bar absolute inset-x-0 -bottom-px" aria-hidden="true" />
       </header>
 
       {menuOpen && (
@@ -136,15 +144,18 @@ export function Layout({ children }: { children: ReactNode }) {
           return (
             <div
               key={n.job.id}
-              className={`rounded-lg shadow-lg px-4 py-3 text-sm text-white ${n.job.status === "done" ? "bg-green-600" : "bg-red-600"}`}
+              className={`mt-bounce-in rounded-lg shadow-lg px-4 py-3 text-sm text-white ${n.job.status === "done" ? "fh-toast-ok" : "bg-red-600"}`}
             >
               <div className="flex items-center justify-between gap-4">
-                <span>
+                <span className="flex items-start gap-2">
+                  <MindIcon name={n.job.status === "done" ? "check" : "alert"} variant="white" />
+                  <span>
                   {n.job.type === "compress" ? "Сжатие" : "Конвертация"}: {n.job.status === "done" ? "завершено" : "ошибка"}
                   {result ? ` — ${result.fileName}` : ""}
+                  </span>
                 </span>
-                <button onClick={() => dismiss(n.job.id)} className="opacity-70 hover:opacity-100 shrink-0">
-                  ×
+                <button onClick={() => dismiss(n.job.id)} className="opacity-70 hover:opacity-100 shrink-0" aria-label="Закрыть">
+                  <MindIcon name="close" variant="white" />
                 </button>
               </div>
               {result &&
@@ -180,7 +191,7 @@ export function Layout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex-1 flex flex-col items-center py-2 text-xs ${active ? "text-brand-600" : "text-gray-500"}`}
             >
-              <span className="text-lg leading-none">{item.icon}</span>
+              <MindIcon name={item.icon} className="text-lg leading-none" />
               <span className="mt-0.5">{item.label}</span>
             </Link>
           );

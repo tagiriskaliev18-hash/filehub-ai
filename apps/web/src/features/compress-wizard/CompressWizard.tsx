@@ -52,8 +52,8 @@ export function CompressWizard({ files, onClose, onQueued }: { files: FileDto[];
   if (jobId) {
     return (
       <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4">
-          <h2 className="text-lg font-semibold">Сжатие файлов</h2>
+        <div className="fh-card mt-bounce-in p-6 w-full max-w-md space-y-4">
+          <h2 className="text-lg font-semibold mt-gradient-text inline-block">Сжатие файлов</h2>
           {!job || job.status === "queued" || job.status === "running" ? (
             <>
               <ProgressBar percent={job?.progress ?? 0} />
@@ -71,7 +71,7 @@ export function CompressWizard({ files, onClose, onQueued }: { files: FileDto[];
             <button
               onClick={onClose}
               disabled={job?.status === "queued" || job?.status === "running"}
-              className="px-4 py-2 text-sm bg-brand-600 text-white rounded hover:bg-brand-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm mt-btn rounded-lg disabled:opacity-50"
             >
               {job?.status === "queued" || job?.status === "running" ? "Выполняется…" : "Закрыть"}
             </button>
@@ -83,8 +83,8 @@ export function CompressWizard({ files, onClose, onQueued }: { files: FileDto[];
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4">
-        <h2 className="text-lg font-semibold">Сжать до заданного размера</h2>
+      <div className="fh-card mt-bounce-in p-6 w-full max-w-md space-y-4">
+        <h2 className="text-lg font-semibold mt-gradient-text inline-block">Сжать до заданного размера</h2>
         <div className="text-sm text-gray-500">
           Файлов выбрано: {files.length}
           <ul className="mt-1 max-h-24 overflow-y-auto">
@@ -132,7 +132,7 @@ export function CompressWizard({ files, onClose, onQueued }: { files: FileDto[];
           <button
             onClick={submit}
             disabled={busy}
-            className="px-4 py-2 text-sm bg-brand-600 text-white rounded hover:bg-brand-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm mt-btn rounded-lg disabled:opacity-50"
           >
             {busy ? "Отправка…" : "Сжать"}
           </button>

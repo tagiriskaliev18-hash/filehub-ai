@@ -26,9 +26,9 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-gray-50 px-4">
-      <form onSubmit={onSubmit} className="bg-white shadow rounded-xl p-6 sm:p-8 w-full max-w-sm space-y-4">
-        <h1 className="text-xl font-semibold text-brand-700">Регистрация в FileHub AI</h1>
+    <div className="flex-1 min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <form onSubmit={onSubmit} className="fh-card mt-bounce-in p-6 sm:p-8 w-full max-w-sm space-y-4">
+        <h1 className="text-xl font-semibold mt-gradient-text">Регистрация в FileHub AI</h1>
         <p className="text-sm text-gray-500">Первый зарегистрированный пользователь автоматически получает роль администратора.</p>
         {error && <div className="text-sm text-red-600 bg-red-50 rounded p-2">{error}</div>}
         <div>
@@ -54,7 +54,7 @@ export function RegisterPage() {
         <button
           type="submit"
           disabled={busy}
-          className="w-full bg-brand-600 text-white rounded py-2 text-sm font-medium hover:bg-brand-700 disabled:opacity-50"
+          className="w-full mt-btn rounded-lg py-2 text-sm font-medium disabled:opacity-50"
         >
           Зарегистрироваться
         </button>

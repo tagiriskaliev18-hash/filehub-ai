@@ -9,6 +9,7 @@ import { CompressWizard } from "../features/compress-wizard/CompressWizard";
 import { ConvertWizard } from "../features/convert-wizard/ConvertWizard";
 import { ChatPanel } from "../features/agent-chat/ChatPanel";
 import { UploadActionsModal } from "../components/UploadActionsModal";
+import { MindIcon } from "../components/MindIcon";
 
 export function FileManagerPage() {
   const [path, setPath] = useState<Crumb[]>([{ id: null, name: "Мои файлы" }]);
@@ -169,13 +170,14 @@ export function FileManagerPage() {
               placeholder="Поиск…"
               className="border rounded px-3 py-1.5 text-sm w-28 sm:w-48"
             />
-            <button onClick={handleNewFolder} className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50 whitespace-nowrap">
-              + Папка
+            <button onClick={handleNewFolder} className="px-3 py-1.5 text-sm border rounded hover:bg-gray-50 whitespace-nowrap inline-flex items-center gap-1 mt-bounce">
+              <MindIcon name="plus" /> Папка
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-1.5 text-sm bg-brand-600 text-white rounded hover:bg-brand-700 whitespace-nowrap"
+              className="px-3 py-1.5 text-sm mt-btn rounded-lg whitespace-nowrap"
             >
+              <MindIcon name="upload" variant="white" />
               Загрузить
             </button>
             <input ref={fileInputRef} type="file" multiple hidden onChange={(e) => handleUpload(e.target.files)} />
@@ -185,11 +187,11 @@ export function FileManagerPage() {
         {selected.size > 0 && (
           <div className="px-4 py-2 bg-brand-50 border-b flex items-center gap-3 flex-wrap text-sm">
             <span>Выбрано: {selected.size}</span>
-            <button onClick={() => setShowCompress(true)} className="px-3 py-1 border rounded hover:bg-white">
-              Сжать
+            <button onClick={() => setShowCompress(true)} className="px-3 py-1 border rounded hover:bg-white inline-flex items-center gap-1 mt-bounce">
+              <MindIcon name="compress" /> Сжать
             </button>
-            <button onClick={() => setShowConvert(true)} className="px-3 py-1 border rounded hover:bg-white">
-              Конвертировать
+            <button onClick={() => setShowConvert(true)} className="px-3 py-1 border rounded hover:bg-white inline-flex items-center gap-1 mt-bounce">
+              <MindIcon name="refresh" /> Конвертировать
             </button>
             <button
               onClick={async () => {
@@ -197,9 +199,9 @@ export function FileManagerPage() {
                 setSelected(new Set());
                 await load();
               }}
-              className="px-3 py-1 border rounded hover:bg-white text-red-600"
+              className="px-3 py-1 border rounded hover:bg-white text-red-600 inline-flex items-center gap-1 mt-bounce"
             >
-              Удалить
+              <MindIcon name="trash" variant="mono" /> Удалить
             </button>
           </div>
         )}
@@ -207,8 +209,8 @@ export function FileManagerPage() {
         {error && (
           <div className="px-4 py-2 text-sm text-red-600 bg-red-50 flex items-center justify-between gap-4">
             <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-700 shrink-0">
-              ×
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-700 shrink-0 inline-flex" aria-label="Закрыть">
+              <MindIcon name="close" variant="mono" />
             </button>
           </div>
         )}
@@ -240,7 +242,7 @@ export function FileManagerPage() {
                     <tr key={folder.id} className="border-b hover:bg-gray-50 cursor-pointer" onDoubleClick={() => openFolder(folder)}>
                       <td></td>
                       <td className="py-2 flex items-center gap-2" onClick={() => openFolder(folder)}>
-                        <span>📁</span> {folder.name}
+                        <MindIcon name="folder" /> {folder.name}
                       </td>
                       <td>—</td>
                       <td className="hidden sm:table-cell">—</td>
@@ -253,7 +255,7 @@ export function FileManagerPage() {
                       <input type="checkbox" checked={selected.has(file.id)} onChange={() => toggleSelect(file.id)} />
                     </td>
                     <td className="py-2 cursor-pointer" onClick={() => setDetailsFile(file)}>
-                      <span className="mr-2">{iconFor(file.mimeType)}</span>
+                      <MindIcon name={iconFor(file.mimeType)} className="mr-2" />
                       {file.name}
                       {file.lastAuthor === "AGENT" && (
                         <span className="ml-2 text-xs bg-purple-100 text-purple-700 rounded px-1.5 py-0.5">ИИ</span>
@@ -297,8 +299,8 @@ export function FileManagerPage() {
       {detailsFile && (
         <div className="w-full sm:w-96 border-l bg-white flex flex-col">
           <div className="border-b flex items-center">
-            <button onClick={() => setDetailsFile(null)} className="sm:hidden px-3 text-gray-500">
-              ← Назад
+            <button onClick={() => setDetailsFile(null)} className="sm:hidden px-3 text-gray-500 inline-flex items-center gap-1">
+              <MindIcon name="back" /> Назад
             </button>
             <button
               onClick={() => setDetailsTab("info")}
@@ -312,8 +314,8 @@ export function FileManagerPage() {
             >
               ИИ-агент
             </button>
-            <button onClick={() => setDetailsFile(null)} className="hidden sm:block px-3 text-gray-400 hover:text-gray-700">
-              ×
+            <button onClick={() => setDetailsFile(null)} className="hidden sm:block px-3 text-gray-400 hover:text-gray-700" aria-label="Закрыть">
+              <MindIcon name="close" />
             </button>
           </div>
 
