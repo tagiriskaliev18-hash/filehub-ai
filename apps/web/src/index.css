@@ -5,3 +5,51 @@
 body {
   @apply bg-gray-50 text-gray-900;
 }
+
+/* ---------- Стиль Mind поверх светлой темы FileHub ---------- */
+/* Неактивная 3D-кнопка не прыгает и не светится */
+.mt-btn:disabled {
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.3);
+  box-shadow: var(--mt-depth-highlight);
+}
+/* Светлая карточка с глубиной (mt-card из MindKit — тёмная) */
+.fh-card {
+  background: #fff;
+  border-radius: var(--mt-radius-md);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 0 rgba(155, 93, 229, 0.12), 0 6px 16px rgba(91, 77, 207, 0.12),
+    0 18px 40px rgba(20, 10, 60, 0.12);
+}
+/* Акцентная полоса-градиент под шапкой */
+.fh-accent-bar {
+  height: 3px;
+  background: var(--mt-gradient-flow);
+  background-size: 200% 200%;
+  animation: mt-flow var(--mt-shimmer) ease-in-out infinite;
+}
+/* Сообщение пользователя в чате — переливающийся градиент */
+.fh-bubble-user {
+  background: var(--mt-gradient-flow);
+  background-size: 200% 200%;
+  animation: mt-flow var(--mt-shimmer) ease-in-out infinite;
+  box-shadow: var(--mt-depth-highlight), 0 4px 12px rgba(91, 77, 207, 0.25);
+}
+/* Тост: 3D-плашка, градиентная при успехе */
+.fh-toast-ok {
+  background: var(--mt-gradient-flow);
+  background-size: 200% 200%;
+  animation: mt-flow var(--mt-shimmer) ease-in-out infinite;
+  box-shadow: var(--mt-depth-highlight), var(--mt-depth-raised);
+}
+/* Полоса прогресса — градиент */
+.fh-progress {
+  background: var(--mt-gradient-mind);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fh-accent-bar,
+  .fh-bubble-user,
+  .fh-toast-ok {
+    animation: none !important;
+  }
+}

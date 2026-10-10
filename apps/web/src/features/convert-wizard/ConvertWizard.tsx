@@ -67,8 +67,8 @@ export function ConvertWizard({ files, onClose, onQueued }: { files: FileDto[]; 
   if (jobId) {
     return (
       <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4">
-          <h2 className="text-lg font-semibold">Конвертация файлов</h2>
+        <div className="fh-card mt-bounce-in p-6 w-full max-w-md space-y-4">
+          <h2 className="text-lg font-semibold mt-gradient-text inline-block">Конвертация файлов</h2>
           {!job || job.status === "queued" || job.status === "running" ? (
             <>
               <ProgressBar percent={job?.progress ?? 0} />
@@ -86,7 +86,7 @@ export function ConvertWizard({ files, onClose, onQueued }: { files: FileDto[]; 
             <button
               onClick={onClose}
               disabled={job?.status === "queued" || job?.status === "running"}
-              className="px-4 py-2 text-sm bg-brand-600 text-white rounded hover:bg-brand-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm mt-btn rounded-lg disabled:opacity-50"
             >
               {job?.status === "queued" || job?.status === "running" ? "Выполняется…" : "Закрыть"}
             </button>
@@ -98,8 +98,8 @@ export function ConvertWizard({ files, onClose, onQueued }: { files: FileDto[]; 
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4">
-        <h2 className="text-lg font-semibold">Конвертировать формат</h2>
+      <div className="fh-card mt-bounce-in p-6 w-full max-w-md space-y-4">
+        <h2 className="text-lg font-semibold mt-gradient-text inline-block">Конвертировать формат</h2>
         <div className="text-sm text-gray-500">Файлов выбрано: {files.length}</div>
 
         {!allKnown && <div className="text-sm text-amber-700 bg-amber-50 rounded p-2">Один или несколько файлов не поддерживают конвертацию.</div>}
@@ -141,7 +141,7 @@ export function ConvertWizard({ files, onClose, onQueued }: { files: FileDto[]; 
           <button
             onClick={submit}
             disabled={busy || !targetFormat}
-            className="px-4 py-2 text-sm bg-brand-600 text-white rounded hover:bg-brand-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm mt-btn rounded-lg disabled:opacity-50"
           >
             {busy ? "Отправка…" : "Конвертировать"}
           </button>

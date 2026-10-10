@@ -5,6 +5,7 @@ import { api } from "../lib/api";
 import { iconFor } from "../lib/fileIcons";
 import { formatDate } from "../lib/format";
 import { ChatPanel } from "../features/agent-chat/ChatPanel";
+import { MindIcon } from "../components/MindIcon";
 
 // A dedicated, first-class home for the AI agent (rather than something
 // nested a click deep inside a file's details panel). Two ways in: pick a
@@ -56,10 +57,13 @@ export function AgentPage() {
     <div className="flex flex-1 overflow-hidden">
       <div className={`w-full sm:w-80 border-r bg-white flex flex-col ${sessionId ? "hidden sm:flex" : "flex"}`}>
         <div className="p-4 border-b space-y-2">
-          <h1 className="font-semibold text-lg">ИИ-агент</h1>
+          <h1 className="font-semibold text-lg flex items-center gap-2">
+            <MindIcon name="bot" />
+            <span className="mt-gradient-text">ИИ-агент</span>
+          </h1>
           <p className="text-xs text-gray-500">Выберите файл, чтобы начать диалог по его содержимому, или откройте общий чат и прикрепите файлы прямо там.</p>
-          <button onClick={startGeneralChat} className="w-full px-3 py-2 bg-brand-600 text-white rounded text-sm hover:bg-brand-700">
-            + Новый общий чат
+          <button onClick={startGeneralChat} className="w-full px-3 py-2 mt-btn rounded-lg text-sm">
+            <MindIcon name="plus" variant="white" /> Новый общий чат
           </button>
         </div>
         <div className="p-3 border-b">
@@ -84,7 +88,7 @@ export function AgentPage() {
                 onClick={() => openFile(f.id)}
                 className="w-full text-left px-4 py-3 border-b hover:bg-gray-50 flex items-start gap-2"
               >
-                <span className="text-lg leading-none">{iconFor(f.mimeType)}</span>
+                <MindIcon name={iconFor(f.mimeType)} className="text-lg leading-none" />
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm truncate">{f.name}</span>
                   <span className="block text-xs text-gray-400">{formatDate(f.updatedAt)}</span>
@@ -99,8 +103,8 @@ export function AgentPage() {
         {sessionId ? (
           <>
             <div className="border-b px-4 py-3 flex items-center gap-3 bg-white">
-              <button onClick={() => setSessionId(null)} className="sm:hidden text-gray-500">
-                ← Назад
+              <button onClick={() => setSessionId(null)} className="sm:hidden text-gray-500 inline-flex items-center gap-1">
+                <MindIcon name="back" /> Назад
               </button>
               <span className="font-medium truncate flex-1">Диалог с ИИ-агентом</span>
             </div>
@@ -109,7 +113,9 @@ export function AgentPage() {
         ) : (
           <div className="flex-1 flex items-center justify-center text-center text-gray-400 p-8">
             <div>
-              <div className="text-4xl mb-3">🤖</div>
+              <div className="mt-orb mt-bounce-in w-16 h-16 mx-auto mb-4 grid place-items-center">
+                <MindIcon name="bot" variant="white" className="text-3xl" />
+              </div>
               <p>Выберите файл слева, или начните общий чат, чтобы прикрепить файлы прямо в диалоге.</p>
             </div>
           </div>

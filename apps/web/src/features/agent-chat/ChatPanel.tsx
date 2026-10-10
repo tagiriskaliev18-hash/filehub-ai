@@ -3,6 +3,7 @@ import type { DragEvent } from "react";
 import type { AgentMessageDto, FileDto } from "@filehub/shared";
 import { api, ApiError } from "../../lib/api";
 import { iconFor } from "../../lib/fileIcons";
+import { MindIcon } from "../../components/MindIcon";
 
 // Session-centric rather than file-centric: a chat can have zero or more
 // files attached (attach existing ones, or upload new ones right here),
@@ -252,21 +253,24 @@ export function ChatPanel({
     >
       {isDragging && (
         <div className="absolute inset-0 z-20 bg-brand-600/10 border-4 border-dashed border-brand-500 rounded flex items-center justify-center pointer-events-none">
-          <div className="bg-white px-6 py-4 rounded-lg shadow-lg text-brand-700 font-medium">📎 Отпустите файл(ы), чтобы загрузить в чат</div>
+          <div className="fh-card mt-bounce-in px-6 py-4 text-brand-700 font-medium flex items-center gap-2">
+            <MindIcon name="attach" /> Отпустите файл(ы), чтобы загрузить в чат
+          </div>
         </div>
       )}
       <div className="border-b px-3 py-2 flex flex-wrap items-center gap-2 bg-gray-50">
         {attached.map((f) => (
           <span key={f.id} className="inline-flex items-center gap-1 bg-white border rounded-full pl-2 pr-1 py-0.5 text-xs">
-            <span>{iconFor(f.mimeType)}</span>
+            <MindIcon name={iconFor(f.mimeType)} />
             <span className="max-w-[140px] truncate">{f.name}</span>
-            <button onClick={() => detach(f.id)} title="Открепить" className="text-gray-400 hover:text-red-600 px-1">
-              ×
+            <button onClick={() => detach(f.id)} title="Открепить" className="text-gray-400 hover:text-red-600 px-1 inline-flex">
+              <MindIcon name="close" variant="mono" />
             </button>
           </span>
         ))}
-        <button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="text-xs px-2 py-1 border rounded hover:bg-white disabled:opacity-50">
-          {uploading ? "Загрузка…" : "+ Загрузить файл"}
+        <button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="text-xs px-2 py-1 border rounded hover:bg-white disabled:opacity-50 inline-flex items-center gap-1 mt-bounce">
+          <MindIcon name="upload" />
+          {uploading ? "Загрузка…" : "Загрузить файл"}
         </button>
         <input
           ref={fileInputRef}
@@ -278,15 +282,15 @@ export function ChatPanel({
           }}
         />
         <div className="relative">
-          <button onClick={openAttachPicker} className="text-xs px-2 py-1 border rounded hover:bg-white">
-            + Прикрепить существующий
+          <button onClick={openAttachPicker} className="text-xs px-2 py-1 border rounded hover:bg-white inline-flex items-center gap-1 mt-bounce">
+            <MindIcon name="attach" /> Прикрепить существующий
           </button>
           {attachPickerOpen && (
             <div className="absolute z-10 mt-1 w-64 max-h-64 overflow-y-auto bg-white border rounded shadow-lg">
               <div className="flex justify-between items-center px-2 py-1 border-b text-xs text-gray-400">
                 <span>Выберите файл</span>
-                <button onClick={() => setAttachPickerOpen(false)} className="hover:text-gray-700">
-                  ×
+                <button onClick={() => setAttachPickerOpen(false)} className="hover:text-gray-700 inline-flex" aria-label="Закрыть">
+                  <MindIcon name="close" variant="mono" />
                 </button>
               </div>
               {attachableFiles.length === 0 ? (
@@ -294,7 +298,7 @@ export function ChatPanel({
               ) : (
                 attachableFiles.map((f) => (
                   <button key={f.id} onClick={() => attachExisting(f.id)} className="w-full text-left px-2 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1">
-                    <span>{iconFor(f.mimeType)}</span>
+                    <MindIcon name={iconFor(f.mimeType)} />
                     <span className="truncate">{f.name}</span>
                   </button>
                 ))
@@ -312,7 +316,7 @@ export function ChatPanel({
         )}
         {messages.map((m) => (
           <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.role === "user" ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-800"}`}>
+            <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.role === "user" ? "fh-bubble-user text-white" : "bg-gray-100 text-gray-800"} mt-bounce-in`}>
               <div className="whitespace-pre-wrap">{m.content}</div>
               {m.proposedDiff && (
                 <div className="mt-2 bg-white rounded border text-gray-800 p-2 text-xs space-y-2">
@@ -401,8 +405,9 @@ export function ChatPanel({
         <button
           onClick={send}
           disabled={sending || !input.trim()}
-          className="px-4 py-2 bg-brand-600 text-white rounded text-sm hover:bg-brand-700 disabled:opacity-50"
+          className="px-4 py-2 mt-btn rounded-lg text-sm disabled:opacity-50"
         >
+          <MindIcon name="send" variant="white" />
           Отправить
         </button>
       </div>

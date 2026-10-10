@@ -44,7 +44,7 @@ export function ProgressBar({ percent }: { percent: number }) {
   return (
     <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
       <div
-        className="bg-brand-600 h-2 rounded-full transition-all duration-300 ease-out"
+        className="fh-progress h-2 rounded-full transition-all duration-300 ease-out"
         style={{ width: `${Math.max(0, Math.min(100, percent))}%` }}
       />
     </div>
