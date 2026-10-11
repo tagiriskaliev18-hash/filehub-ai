@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import type { UserDto } from "@filehub/shared";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -46,6 +46,7 @@ function renderRoute(adminOnly = false) {
 
 describe("ProtectedRoute", () => {
   beforeEach(() => {
+    cleanup();
     auth.state.user = null;
     auth.state.loading = true;
   });

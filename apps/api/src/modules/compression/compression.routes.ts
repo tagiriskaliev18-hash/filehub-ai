@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { compressRequestSchema } from "@filehub/shared";
-import { asyncHandler, HttpError } from "../../lib/asyncHandler.js";
+import { asyncHandler } from "../../lib/asyncHandler.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { getOwnedFile } from "../files/files.service.js";
 import { createJob } from "../jobs/jobs.service.js";

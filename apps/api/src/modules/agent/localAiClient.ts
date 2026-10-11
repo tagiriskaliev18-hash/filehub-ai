@@ -153,6 +153,7 @@ export async function createLocalAiCompletion(params: {
       const minutes = (env.localAiTimeoutMs / 60_000).toFixed(1);
       throw new Error(
         `Локальная модель не ответила за ${minutes} мин. — запрос, скорее всего, слишком большой или сложный для текущего контекстного окна модели. Попробуйте отправить меньше файлов за раз или задать более узкий вопрос.`,
+        { cause: err },
       );
     }
     // Node's bare "fetch failed" (a connection reset with no HTTP response
@@ -164,6 +165,7 @@ export async function createLocalAiCompletion(params: {
     // "fetch failed".
     throw new Error(
       "Не удалось получить ответ от локальной модели — соединение оборвалось. Часто это означает, что запрос слишком большой для текущего контекстного окна модели (например, много файлов или страниц сканов сразу). Попробуйте отправить меньше файлов за раз или задать более узкий вопрос.",
+      { cause: err },
     );
   } finally {
     clearTimeout(timeout);

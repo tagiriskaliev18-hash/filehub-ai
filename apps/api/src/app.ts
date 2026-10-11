@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import { env } from "./env.js";
 import { cidrAllowlist } from "./middleware/cidrAllowlist.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { healthRouter } from "./routes/health.js";

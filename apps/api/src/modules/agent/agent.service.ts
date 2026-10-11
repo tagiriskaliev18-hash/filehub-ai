@@ -10,7 +10,6 @@ import {
   getToolsForCategories,
   dispatchTool,
   type AgentToolContext,
-  type AttachedFileState,
   type DocCategory,
 } from "./toolRegistry.js";
 import * as docxTools from "./tools/docx.js";
@@ -179,7 +178,7 @@ export async function sendMessage(sessionId: string, userId: string, content: st
   };
 
   try {
-  const session = await requireOwnedSession(sessionId, userId);
+  await requireOwnedSession(sessionId, userId);
 
   await prisma.agentMessage.create({ data: { sessionId, role: "user", content } });
 
