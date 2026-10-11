@@ -1,4 +1,3 @@
-import path from "node:path";
 import { prisma } from "../../prisma.js";
 import { storage } from "../storage/storage.adapter.js";
 import { createNewVersion, uploadFile } from "../files/files.service.js";
@@ -7,30 +6,7 @@ import { compressMediaToTarget } from "./compressors/media.js";
 import { compressPdfToTarget } from "./compressors/pdf.js";
 import { compressOfficeZipToTarget, recompressArchive } from "./compressors/officeZip.js";
 import type { CompressRequestInput } from "@filehub/shared";
-
-type CompressCategory = "image" | "video" | "audio" | "pdf" | "office" | "archive" | "unsupported";
-
-const OFFICE_MIMES = new Set([
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-]);
-
-function categorize(mime: string): CompressCategory {
-  if (mime.startsWith("image/")) return "image";
-  if (mime.startsWith("video/")) return "video";
-  if (mime.startsWith("audio/")) return "audio";
-  if (mime === "application/pdf") return "pdf";
-  if (OFFICE_MIMES.has(mime)) return "office";
-  if (mime === "application/zip") return "archive";
-  return "unsupported";
-}
-
-function resolveTargetBytes(unit: CompressRequestInput["targetUnit"], value: number, originalBytes: number): number {
-  if (unit === "MB") return Math.round(value * 1024 * 1024);
-  if (unit === "KB") return Math.round(value * 1024);
-  return Math.round(originalBytes * (value / 100));
-}
+import { categorize, extOf, resolveTargetBytes, stripExt, suffixName } from "./targets.js";
 
 export interface CompressFileResult {
   fileId: string;
@@ -123,15 +99,3 @@ export async function compressOneFile(
   };
 }
 
-function extOf(name: string): string {
-  return path.extname(name).replace(".", "").toLowerCase();
-}
-function stripExt(name: string): string {
-  const ext = path.extname(name);
-  return ext ? name.slice(0, -ext.length) : name;
-}
-function suffixName(name: string, suffix: string): string {
-  const ext = path.extname(name);
-  const base = ext ? name.slice(0, -ext.length) : name;
-  return `${base}${suffix}${ext}`;
-}

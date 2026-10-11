@@ -14,3 +14,4 @@ apps/api/prisma/*.db-wal
 apps/api/prisma/*.db-journal
 *.log
 .DS_Store
+coverage/

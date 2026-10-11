@@ -4,9 +4,28 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Stable only so local sessions survive a dev-server restart. It is not a
+// credential: production refuses to boot with it, or with the placeholder
+// published in .env.example.
+const DEV_JWT_SECRET = "dev-only-insecure-secret-change-me";
+const PUBLIC_JWT_PLACEHOLDERS = new Set([DEV_JWT_SECRET, "change-this-to-a-long-random-string"]);
+
+function resolveJwtSecret(): string {
+  const configured = process.env.JWT_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    if (!configured || PUBLIC_JWT_PLACEHOLDERS.has(configured)) {
+      throw new Error(
+        "JWT_SECRET must be set to a unique random value when NODE_ENV=production. Refusing to start with a missing or public placeholder secret.",
+      );
+    }
+    return configured;
+  }
+  return configured ?? DEV_JWT_SECRET;
+}
+
 export const env = {
   port: Number(process.env.PORT ?? 4000),
-  jwtSecret: process.env.JWT_SECRET ?? "dev-only-insecure-secret-change-me",
+  jwtSecret: resolveJwtSecret(),
   sessionCookieName: process.env.SESSION_COOKIE_NAME ?? "fh_session",
   storageRoot: path.resolve(__dirname, "..", process.env.STORAGE_ROOT ?? "../../storage"),
   anthropicApiKey: process.env.ANTHROPIC_API_KEY?.trim() || null,

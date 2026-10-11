@@ -15,10 +15,20 @@
     "prisma:migrate": "npm run prisma:migrate -w apps/api",
     "prisma:deploy": "npm run prisma:deploy -w apps/api",
     "start": "node apps/api/dist/server.js",
-    "share": "concurrently -n app,tunnel -c green,cyan \"node apps/api/dist/server.js\" \"npx localtunnel --port 4000\""
+    "share": "concurrently -n app,tunnel -c green,cyan \"node apps/api/dist/server.js\" \"npx localtunnel --port 4000\"",
+    "lint": "eslint .",
+    "typecheck": "npm run build -w packages/shared && tsc -p packages/shared/tsconfig.typecheck.json --noEmit && tsc -p apps/api/tsconfig.typecheck.json --noEmit && tsc -p apps/web/tsconfig.typecheck.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
-    "concurrently": "^9.0.1"
+    "@eslint/js": "^10.0.1",
+    "@testing-library/react": "^16.3.3",
+    "concurrently": "^9.0.1",
+    "eslint": "^10.12.0",
+    "jsdom": "^29.1.1",
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3"
   },
   "allowScripts": {
     "@prisma/client@5.22.0": true,
